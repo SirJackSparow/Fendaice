@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "673779997387-e8cs8m4nbem12sjdsme1lmc44o9i06ht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dg.fendaice",
+            "certificate_hash": "523bb7dd25f3c42c92d6309148247c486f16a7d9"
+          }
+        },
+        {
           "client_id": "673779997387-nrflsga86om8c1ukk6pvu089p4ulp5gv.apps.googleusercontent.com",
           "client_type": 3
         }
