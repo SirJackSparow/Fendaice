@@ -19,10 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
+import com.dg.fendaice.R
 
 @Composable
 fun MenuScreen(
@@ -58,7 +60,7 @@ fun MenuScreen(
             )
 
             Text(
-                text = "Math Master",
+                text = stringResource(R.string.math_master_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary,
@@ -67,7 +69,7 @@ fun MenuScreen(
             )
             
             Text(
-                text = "Choose Your Challenge",
+                text = stringResource(R.string.choose_challenge_subtitle),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = (screenWidth.value * 0.045f).sp

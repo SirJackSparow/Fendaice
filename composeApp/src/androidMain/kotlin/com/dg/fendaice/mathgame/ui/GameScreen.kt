@@ -20,11 +20,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import com.dg.fendaice.mathgame.MathGameViewModel
+import com.dg.fendaice.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -221,7 +223,7 @@ fun GameScreen(viewModel: MathGameViewModel, onBack: () -> Unit) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                "Tap the correct answer", 
+                                stringResource(R.string.tap_correct_answer), 
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(bottom = 24.dp)

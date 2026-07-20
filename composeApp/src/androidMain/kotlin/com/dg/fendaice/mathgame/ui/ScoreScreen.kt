@@ -9,10 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
+import com.dg.fendaice.R
 
 @Composable
 fun ScoreScreen(
@@ -97,7 +99,7 @@ fun ScoreScreen(
                     .height(64.dp),
                 shape = RoundedCornerShape(20.dp)
             ) {
-                Text("Try Again", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.try_again_button), style = MaterialTheme.typography.titleMedium)
             }
             
             Spacer(Modifier.height(16.dp))
@@ -109,7 +111,7 @@ fun ScoreScreen(
                     .height(64.dp),
                 shape = RoundedCornerShape(20.dp)
             ) {
-                Text("Back to Menu", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.back_to_menu_button), style = MaterialTheme.typography.titleMedium)
             }
         }
     }

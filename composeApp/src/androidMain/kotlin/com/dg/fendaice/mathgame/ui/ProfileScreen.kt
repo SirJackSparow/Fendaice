@@ -19,10 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dg.fendaice.mathgame.MathGameViewModel
+import com.dg.fendaice.R
 
 @Composable
 fun ProfileScreen(
@@ -109,7 +111,7 @@ fun ProfileScreen(
         ) {
             Icon(Icons.Default.Share, null)
             Spacer(Modifier.width(8.dp))
-            Text("Share App with Friends", fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.share_app_button), fontWeight = FontWeight.Bold)
         }
         
         Spacer(modifier = Modifier.height(16.dp))

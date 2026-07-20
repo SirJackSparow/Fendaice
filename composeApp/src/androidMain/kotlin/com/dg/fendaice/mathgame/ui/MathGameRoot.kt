@@ -8,8 +8,10 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dg.fendaice.mathgame.MathGameViewModel
+import com.dg.fendaice.R
 
 @Composable
 fun MathGameRoot(
@@ -28,13 +30,13 @@ fun MathGameRoot(
                         selected = currentScreen == GameDestination.Menu,
                         onClick = { currentScreen = GameDestination.Menu },
                         icon = { Icon(Icons.Rounded.Home, null) },
-                        label = { Text("Home") }
+                        label = { Text(stringResource(R.string.home_tab)) }
                     )
                     NavigationBarItem(
                         selected = currentScreen == GameDestination.Profile,
                         onClick = { currentScreen = GameDestination.Profile },
                         icon = { Icon(Icons.Rounded.Person, null) },
-                        label = { Text("Profile") }
+                        label = { Text(stringResource(R.string.profile_tab)) }
                     )
                 }
             }

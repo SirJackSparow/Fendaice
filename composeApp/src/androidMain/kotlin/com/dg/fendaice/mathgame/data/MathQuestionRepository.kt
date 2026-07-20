@@ -9,6 +9,8 @@ import com.dg.fendaice.mathgame.data.sync.SyncManager
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
+import kotlin.collections.take
+import kotlin.random.Random
 
 class MathQuestionRepository(context: Context) {
     private val db = FirebaseFirestore.getInstance()
@@ -23,7 +25,7 @@ class MathQuestionRepository(context: Context) {
         // 1. Emit current local data (if any)
         val localQuestions = questionDao.getQuestions(ageGroup, topic, level).first()
         if (localQuestions.isNotEmpty()) {
-            emit(localQuestions.map { it.toDomain() })
+            emit(localQuestions.shuffled().take(10).map { it.toDomain() })
         }
 
         // 2. Check if DB is totally empty or sync interval passed

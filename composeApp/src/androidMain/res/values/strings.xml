@@ -1,3 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
     <string name="app_name">Fendaice</string>
+
+    <!-- Registration Screen -->
+    <string name="welcome_title">Welcome to Fendaice</string>
+    <string name="welcome_subtitle">Enter your name to start learning!</string>
+    <string name="your_name_label">Your Name</string>
+    <string name="get_started_button">Get Started</string>
+
+    <!-- Menu Screen -->
+    <string name="math_master_title">Math Master</string>
+    <string name="choose_challenge_subtitle">Choose Your Challenge</string>
+    <string name="kids_easy">Kids Easy</string>
+    <string name="kids_medium">Kids Medium</string>
+    <string name="kids_hard">Kids Hard</string>
+    <string name="teen_easy">Teen Easy</string>
+    <string name="teen_hard">Teen Hard</string>
+    <string name="adult">Adult</string>
+
+    <!-- Game Screen -->
+    <string name="math_challenge_title">MATH CHALLENGE</string>
+    <string name="back_button">Back</string>
+    <string name="tap_correct_answer">Tap the correct answer</string>
+
+    <!-- Score Screen -->
+    <string name="excellent_message">Excellent!</string>
+    <string name="game_over_message">Game Over!</string>
+    <string name="you_scored_points">You scored %d points</string>
+    <string name="try_again_button">Try Again</string>
+    <string name="back_to_menu_button">Back to Menu</string>
+
+    <!-- Profile Screen -->
+    <string name="total_score_label">Total Score</string>
+    <string name="games_label">Games</string>
+    <string name="share_app_button">Share App with Friends</string>
+
+    <!-- Navigation -->
+    <string name="home_tab">Home</string>
+    <string name="profile_tab">Profile</string>
 </resources>

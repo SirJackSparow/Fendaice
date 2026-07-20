@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Fendaice</string>
+
+    <!-- Registration Screen -->
+    <string name="welcome_title">Selamat datang di Fendaice</string>
+    <string name="welcome_subtitle">Masukkan nama Anda untuk memulai belajar!</string>
+    <string name="your_name_label">Nama Anda</string>
+    <string name="get_started_button">Mulai</string>
+
+    <!-- Menu Screen -->
+    <string name="math_master_title">Master Matematika</string>
+    <string name="choose_challenge_subtitle">Pilih Tantangan Anda</string>
+    <string name="kids_easy">Anak-anak Mudah</string>
+    <string name="kids_medium">Anak-anak Sedang</string>
+    <string name="kids_hard">Anak-anak Sulit</string>
+    <string name="teen_easy">Remaja Mudah</string>
+    <string name="teen_hard">Remaja Sulit</string>
+    <string name="adult">Dewasa</string>
+
+    <!-- Game Screen -->
+    <string name="math_challenge_title">TANTANGAN MATEMATIKA</string>
+    <string name="back_button">Kembali</string>
+    <string name="tap_correct_answer">Ketuk jawaban yang benar</string>
+
+    <!-- Score Screen -->
+    <string name="excellent_message">Sempurna!</string>
+    <string name="game_over_message">Game Over!</string>
+    <string name="you_scored_points">Anda mencetak %d poin</string>
+    <string name="try_again_button">Coba Lagi</string>
+    <string name="back_to_menu_button">Kembali ke Menu</string>
+
+    <!-- Profile Screen -->
+    <string name="total_score_label">Total Skor</string>
+    <string name="games_label">Permainan</string>
+    <string name="share_app_button">Bagikan Aplikasi dengan Teman</string>
+
+    <!-- Navigation -->
+    <string name="home_tab">Beranda</string>
+    <string name="profile_tab">Profil</string>
+</resources>
