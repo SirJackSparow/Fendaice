@@ -7,7 +7,21 @@
     <string name="welcome_title">Welcome to Fendaice</string>
     <string name="welcome_subtitle">Enter your name to start learning!</string>
     <string name="your_name_label">Your Name</string>
+    <string name="password_label">Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="password_notice">Your password is encrypted and invisible to admins.</string>
     <string name="get_started_button">Get Started</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="register_title">Create Account</string>
+    <string name="switch_to_login">Already have an account? Login</string>
+    <string name="switch_to_register">Don\'t have an account? Register</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="login_failed">Invalid name or password</string>
+    <string name="logout_button">Logout</string>
+    <string name="password_visibility_show">Show password</string>
+    <string name="password_visibility_hide">Hide password</string>
 
     <!-- Menu Screen -->
     <string name="math_master_title">Math Master</string>
@@ -38,5 +52,15 @@
 
     <!-- Navigation -->
     <string name="home_tab">Home</string>
+    <string name="ranking_tab">Ranking</string>
     <string name="profile_tab">Profile</string>
+
+    <!-- Ranking Screen -->
+    <string name="ranking_title">Global Rankings</string>
+    <string name="rank_label">Rank</string>
+    <string name="name_label">Name</string>
+    <string name="score_label">Score</string>
+    <string name="refresh_rankings">Refresh Rankings</string>
+    <string name="refreshes_left">Refreshes left: %d</string>
+    <string name="refresh_limit_reached">You have reached the daily refresh limit. Please wait until tomorrow.</string>
 </resources>

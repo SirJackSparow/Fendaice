@@ -6,11 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [QuestionEntity::class, UserStats::class], version = 3, exportSchema = false)
+@Database(entities = [QuestionEntity::class, UserStats::class, RankingUser::class], version = 5, exportSchema = false)
 @TypeConverters(QuestionConverters::class)
 abstract class QuestionDatabase : RoomDatabase() {
     abstract fun questionDao(): QuestionDao
     abstract fun userDao(): UserDao
+    abstract fun rankingDao(): RankingDao
 
     companion object {
         @Volatile

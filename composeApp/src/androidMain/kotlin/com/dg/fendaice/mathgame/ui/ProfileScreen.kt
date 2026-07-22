@@ -113,6 +113,23 @@ fun ProfileScreen(
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.share_app_button), fontWeight = FontWeight.Bold)
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedButton(
+            onClick = onLogout,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Icon(Icons.AutoMirrored.Filled.Logout, null)
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.logout_button), fontWeight = FontWeight.Bold)
+        }
         
         Spacer(modifier = Modifier.height(16.dp))
     }

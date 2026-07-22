@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Stars
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -33,6 +34,12 @@ fun MathGameRoot(
                         label = { Text(stringResource(R.string.home_tab)) }
                     )
                     NavigationBarItem(
+                        selected = currentScreen == GameDestination.Ranking,
+                        onClick = { currentScreen = GameDestination.Ranking },
+                        icon = { Icon(Icons.Rounded.Stars, null) },
+                        label = { Text(stringResource(R.string.ranking_tab)) }
+                    )
+                    NavigationBarItem(
                         selected = currentScreen == GameDestination.Profile,
                         onClick = { currentScreen = GameDestination.Profile },
                         icon = { Icon(Icons.Rounded.Person, null) },
@@ -52,6 +59,10 @@ fun MathGameRoot(
                             currentScreen = GameDestination.Game
                         }
                     )
+                }
+                GameDestination.Ranking -> {
+                    bottomNavVisible = true
+                    RankingScreen(viewModel = viewModel)
                 }
                 GameDestination.Profile -> {
                     bottomNavVisible = true
@@ -75,6 +86,7 @@ fun MathGameRoot(
 
 sealed class GameDestination {
     object Menu : GameDestination()
+    object Ranking : GameDestination()
     object Profile : GameDestination()
     object Game : GameDestination()
 }

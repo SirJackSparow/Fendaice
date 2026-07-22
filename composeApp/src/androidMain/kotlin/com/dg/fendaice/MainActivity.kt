@@ -10,7 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dg.fendaice.mathgame.MathGameViewModel
 import com.dg.fendaice.mathgame.ui.MathGameRoot
-import com.dg.fendaice.mathgame.ui.RegistrationScreen
+import com.dg.fendaice.mathgame.ui.AuthScreen
 import com.dg.fendaice.ui.theme.FendaiceTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,6 +23,7 @@ class MainActivity : ComponentActivity() {
             FendaiceTheme {
                 val gameViewModel = viewModel<MathGameViewModel>()
                 val userStats by gameViewModel.userStats.collectAsState()
+                var loginError by remember { mutableStateOf(false) }
 
                 val userName = userStats?.userName
 
@@ -31,14 +32,19 @@ class MainActivity : ComponentActivity() {
                         userName = userName,
                         viewModel = gameViewModel,
                         onLogout = {
-                            // For local mode, "Logout" can mean clearing the name to "re-register"
-                            gameViewModel.registerUser("") 
+                            gameViewModel.logout()
                         }
                     )
                 } else {
-                    RegistrationScreen(
-                        onRegister = { newName ->
-                            gameViewModel.registerUser(newName)
+                    AuthScreen(
+                        loginFailed = loginError,
+                        onLogin = { name, password ->
+                            gameViewModel.loginUser(name, password) { success ->
+                                loginError = !success
+                            }
+                        },
+                        onRegister = { name, password ->
+                            gameViewModel.registerUser(name, password)
                         }
                     )
                 }

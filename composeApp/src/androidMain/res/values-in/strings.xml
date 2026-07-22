@@ -7,7 +7,21 @@
     <string name="welcome_title">Selamat datang di Fendaice</string>
     <string name="welcome_subtitle">Masukkan nama Anda untuk memulai belajar!</string>
     <string name="your_name_label">Nama Anda</string>
+    <string name="password_label">Kata Sandi</string>
+    <string name="confirm_password_label">Konfirmasi Kata Sandi</string>
+    <string name="password_notice">Kata sandi Anda dienkripsi dan tidak terlihat oleh admin.</string>
     <string name="get_started_button">Mulai</string>
+    <string name="login_button">Masuk</string>
+    <string name="register_button">Daftar</string>
+    <string name="login_title">Selamat Datang Kembali</string>
+    <string name="register_title">Buat Akun</string>
+    <string name="switch_to_login">Sudah punya akun? Masuk</string>
+    <string name="switch_to_register">Belum punya akun? Daftar</string>
+    <string name="password_mismatch">Kata sandi tidak cocok</string>
+    <string name="login_failed">Nama atau kata sandi salah</string>
+    <string name="logout_button">Keluar</string>
+    <string name="password_visibility_show">Tampilkan kata sandi</string>
+    <string name="password_visibility_hide">Sembunyikan kata sandi</string>
 
     <!-- Menu Screen -->
     <string name="math_master_title">Master Matematika</string>
@@ -38,5 +52,15 @@
 
     <!-- Navigation -->
     <string name="home_tab">Beranda</string>
+    <string name="ranking_tab">Peringkat</string>
     <string name="profile_tab">Profil</string>
+
+    <!-- Ranking Screen -->
+    <string name="ranking_title">Peringkat Global</string>
+    <string name="rank_label">Peringkat</string>
+    <string name="name_label">Nama</string>
+    <string name="score_label">Skor</string>
+    <string name="refresh_rankings">Perbarui Peringkat</string>
+    <string name="refreshes_left">Sisa pembaruan: %d</string>
+    <string name="refresh_limit_reached">Anda telah mencapai batas pembaruan harian. Silakan tunggu sampai besok.</string>
 </resources>

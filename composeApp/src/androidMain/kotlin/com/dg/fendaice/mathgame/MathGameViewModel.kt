@@ -5,15 +5,22 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dg.fendaice.mathgame.data.MathQuestion
 import com.dg.fendaice.mathgame.data.MathQuestionRepository
+import com.dg.fendaice.mathgame.data.RankingRepository
 import com.dg.fendaice.mathgame.data.local.QuestionDatabase
 import com.dg.fendaice.mathgame.data.local.UserStats
+import com.dg.fendaice.mathgame.data.sync.SyncManager
+import com.dg.fendaice.mathgame.util.toSha256
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MathGameViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = MathQuestionRepository(application)
-    private val userDao = QuestionDatabase.getDatabase(application).userDao()
+    private val db = QuestionDatabase.getDatabase(application)
+    private val userDao = db.userDao()
+    private val rankingDao = db.rankingDao()
+    private val syncManager = SyncManager(application)
+    private val rankingRepository = RankingRepository(rankingDao, syncManager)
 
     private val _questions = MutableStateFlow<List<MathQuestion>>(emptyList())
     val questions = _questions.asStateFlow()
@@ -44,9 +51,79 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
     val userStats: StateFlow<UserStats?> = userDao.getUserStats()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    fun registerUser(name: String) {
+    val globalRankings = rankingRepository.allRankings
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _currentUserId = MutableStateFlow<String?>(null)
+    val currentUserId = _currentUserId.asStateFlow()
+
+    private val _remainingRefreshes = MutableStateFlow(2)
+    val remainingRefreshes = _remainingRefreshes.asStateFlow()
+
+    init {
         viewModelScope.launch {
-            userDao.updateStats(UserStats(userName = name))
+            _currentUserId.value = syncManager.getUserId()
+        }
+        fetchRankings()
+        updateRemainingRefreshes()
+    }
+
+    private fun updateRemainingRefreshes() {
+        viewModelScope.launch {
+            _remainingRefreshes.value = syncManager.getRemainingManualRefreshes()
+        }
+    }
+
+    fun fetchRankings(isManual: Boolean = false) {
+        viewModelScope.launch {
+            val currentStats = userDao.getUserStats().firstOrNull()
+            
+            if (isManual && currentStats != null) {
+                // Find user in local rankings
+                val localUserId = _currentUserId.value
+                val userInRankings = globalRankings.value.find { it.userId == localUserId }
+                
+                // If score differs from leaderboard, force push before fetching
+                if (userInRankings?.totalScore != currentStats.totalScore) {
+                    rankingRepository.pushStatsToFirestore(currentStats, force = true)
+                }
+            } else if (currentStats != null && currentStats.totalScore == 0) {
+                // Also attempt to push local stats if score is 0
+                rankingRepository.pushStatsToFirestore(currentStats)
+            }
+            
+            rankingRepository.fetchGlobalRankings(force = isManual)
+            updateRemainingRefreshes()
+        }
+    }
+
+    fun registerUser(name: String, password: String) {
+        viewModelScope.launch {
+            // Preserve existing stats when updating user name
+            val currentStats = userDao.getUserStats().firstOrNull() ?: UserStats()
+            val updatedStats = currentStats.copy(
+                userName = name,
+                passwordHash = password.toSha256()
+            )
+            userDao.updateStats(updatedStats)
+            rankingRepository.pushStatsToFirestore(updatedStats)
+        }
+    }
+
+    fun loginUser(name: String, password: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val currentStats = userDao.getUserStats().firstOrNull()
+            if (currentStats != null && currentStats.userName == name && currentStats.passwordHash == password.toSha256()) {
+                onResult(true)
+            } else {
+                onResult(false)
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            userDao.updateStats(UserStats())
         }
     }
 
@@ -76,12 +153,24 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
 
     fun submitAnswer(answer: String) {
         val correct = _currentQuestion.value?.correctAnswer == answer
+        
+        // Calculate points based on level/ageGroup
+        val pointValue = when (currentParams?.first) {
+            "KIDS_EASY" -> 1
+            "KIDS_MEDIUM" -> 2
+            "KIDS_HARD" -> 3
+            "TEEN_EASY" -> 4
+            "TEEN_HARD" -> 5
+            "ADULT" -> 6
+            else -> 1 // Default fallback
+        }
+
         viewModelScope.launch {
             if (correct) {
-                _score.value += 10
+                _score.value += pointValue
                 _lastAnswerCorrect.value = true
             } else {
-                _score.value = maxOf(0, _score.value - 5)
+                _score.value -= pointValue
                 _lastAnswerCorrect.value = false
             }
             
@@ -104,13 +193,15 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
 
     private fun saveScoreToLocal() {
         viewModelScope.launch {
-            val current = userStats.value ?: UserStats()
-            userDao.updateStats(
-                current.copy(
-                    totalScore = current.totalScore + _score.value,
-                    gamesPlayed = current.gamesPlayed + 1
-                )
+            // Read directly from database to avoid race conditions with Flow
+            val currentStats = userDao.getUserStats().firstOrNull() ?: UserStats()
+            val updatedStats = currentStats.copy(
+                totalScore = currentStats.totalScore + _score.value,
+                gamesPlayed = currentStats.gamesPlayed + 1
             )
+            userDao.updateStats(updatedStats)
+            // Push to Firestore if 24 hours have passed
+            rankingRepository.pushStatsToFirestore(updatedStats)
         }
     }
 

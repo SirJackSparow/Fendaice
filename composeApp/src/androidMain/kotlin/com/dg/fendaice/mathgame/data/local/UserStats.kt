@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class UserStats(
     @PrimaryKey val id: Int = 1,
     val userName: String = "",
+    val passwordHash: String = "",
     val totalScore: Int = 0,
     val gamesPlayed: Int = 0
 )
