@@ -63,4 +63,20 @@
     <string name="refresh_rankings">Refresh Rankings</string>
     <string name="refreshes_left">Refreshes left: %d</string>
     <string name="refresh_limit_reached">You have reached the daily refresh limit. Please wait until tomorrow.</string>
+
+    <!-- Notifications -->
+    <string name="notification_default_title">Fendaice</string>
+    <string name="notification_default_body">Time to practice math and climb the ranks!</string>
+    <string name="notification_channel_general">General</string>
+    <string name="notification_channel_general_desc">General app updates and tips</string>
+    <string name="notification_channel_ranking">Rankings</string>
+    <string name="notification_channel_ranking_desc">Leaderboard and ranking updates</string>
+    <string name="notification_channel_challenge">Challenges</string>
+    <string name="notification_channel_challenge_desc">Daily challenges and practice reminders</string>
+    <string name="notification_action_open">Open</string>
+    <string name="notification_action_play_now">Play Now</string>
+    <string name="notification_action_view_ranking">View Ranking</string>
+    <string name="enable_notifications_button">Enable notifications</string>
+    <string name="notifications_enabled">Notifications enabled</string>
+    <string name="notifications_open_settings">Open notification settings</string>
 </resources>

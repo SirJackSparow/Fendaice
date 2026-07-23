@@ -18,10 +18,16 @@ import com.dg.fendaice.R
 fun MathGameRoot(
     userName: String = "Player",
     viewModel: MathGameViewModel = viewModel(),
+    initialDestination: GameDestination = GameDestination.Menu,
     onLogout: () -> Unit = {}
 ) {
-    var currentScreen by remember { mutableStateOf<GameDestination>(GameDestination.Menu) }
+    var currentScreen by remember { mutableStateOf(initialDestination) }
     var bottomNavVisible by remember { mutableStateOf(true) }
+
+    // Update screen if initialDestination changes (e.g. new intent)
+    LaunchedEffect(initialDestination) {
+        currentScreen = initialDestination
+    }
 
     Scaffold(
         bottomBar = {

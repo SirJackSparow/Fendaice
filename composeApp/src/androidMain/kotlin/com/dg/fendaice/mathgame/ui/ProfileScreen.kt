@@ -1,20 +1,27 @@
 package com.dg.fendaice.mathgame.ui
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,8 +30,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dg.fendaice.mathgame.MathGameViewModel
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dg.fendaice.R
+import com.dg.fendaice.mathgame.MathGameViewModel
 
 @Composable
 fun ProfileScreen(
@@ -34,6 +45,52 @@ fun ProfileScreen(
 ) {
     val stats by viewModel.userStats.collectAsState()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    fun checkNotificationsGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+    }
+
+    var notificationsGranted by remember { mutableStateOf(checkNotificationsGranted()) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                notificationsGranted = checkNotificationsGranted()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        notificationsGranted = granted
+    }
+
+    fun openAppNotificationSettings() {
+        val intent = Intent().apply {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                }
+                else -> {
+                    action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    data = Uri.fromParts("package", context.packageName, null)
+                }
+            }
+        }
+        context.startActivity(intent)
+    }
 
     Column(
         modifier = Modifier
@@ -43,8 +100,7 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(48.dp))
-        
-        // Avatar Placeholder
+
         Box(
             modifier = Modifier
                 .size(120.dp)
@@ -52,9 +108,9 @@ fun ProfileScreen(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Default.Person, 
-                contentDescription = null, 
-                modifier = Modifier.size(80.dp), 
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                modifier = Modifier.size(80.dp),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -71,7 +127,6 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Stats Cards
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -94,15 +149,51 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
+        if (notificationsGranted) {
+            OutlinedButton(
+                onClick = { openAppNotificationSettings() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.NotificationsActive, null)
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.notifications_enabled), fontWeight = FontWeight.Bold)
+            }
+        } else {
+            Button(
+                onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        openAppNotificationSettings()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Notifications, null)
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.enable_notifications_button), fontWeight = FontWeight.Bold)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Button(
             onClick = {
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "Hey! I'm learning math with Fendaice! Try it now: https://play.google.com/store/apps/details?id=com.dg.fendaice")
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "Hey! I'm learning math with Fendaice! Try it now: https://play.google.com/store/apps/details?id=com.dg.fendaice"
+                    )
                     type = "text/plain"
                 }
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                context.startActivity(shareIntent)
+                context.startActivity(Intent.createChooser(sendIntent, null))
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,7 +221,7 @@ fun ProfileScreen(
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.logout_button), fontWeight = FontWeight.Bold)
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -157,7 +248,12 @@ fun StatCard(
         ) {
             Icon(icon, null, tint = color, modifier = Modifier.size(32.dp))
             Spacer(Modifier.height(8.dp))
-            Text(value, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+            Text(
+                value,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
             Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }

@@ -63,4 +63,20 @@
     <string name="refresh_rankings">Perbarui Peringkat</string>
     <string name="refreshes_left">Sisa pembaruan: %d</string>
     <string name="refresh_limit_reached">Anda telah mencapai batas pembaruan harian. Silakan tunggu sampai besok.</string>
+
+    <!-- Notifications -->
+    <string name="notification_default_title">Fendaice</string>
+    <string name="notification_default_body">Saatnya berlatih matematika dan naik peringkat!</string>
+    <string name="notification_channel_general">Umum</string>
+    <string name="notification_channel_general_desc">Pembaruan aplikasi dan tips</string>
+    <string name="notification_channel_ranking">Peringkat</string>
+    <string name="notification_channel_ranking_desc">Pembaruan papan peringkat</string>
+    <string name="notification_channel_challenge">Tantangan</string>
+    <string name="notification_channel_challenge_desc">Pengingat tantangan harian dan latihan</string>
+    <string name="notification_action_open">Buka</string>
+    <string name="notification_action_play_now">Main Sekarang</string>
+    <string name="notification_action_view_ranking">Lihat Peringkat</string>
+    <string name="enable_notifications_button">Aktifkan notifikasi</string>
+    <string name="notifications_enabled">Notifikasi aktif</string>
+    <string name="notifications_open_settings">Buka pengaturan notifikasi</string>
 </resources>

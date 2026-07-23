@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Simple math-star mark for status bar (white silhouette) -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,2L14.5,8.5L21.5,9.2L16.2,13.8L17.8,20.7L12,17.4L6.2,20.7L7.8,13.8L2.5,9.2L9.5,8.5Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M8,11h8v1.5H8zM9.5,14h5v1.5h-5z" />
+</vector>
