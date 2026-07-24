@@ -48,6 +48,9 @@ kotlin {
 
             // Splash Screen
             implementation(libs.androidx.core.splashscreen)
+
+            // Google Mobile Ads (AdMob)
+            implementation(libs.play.services.ads)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

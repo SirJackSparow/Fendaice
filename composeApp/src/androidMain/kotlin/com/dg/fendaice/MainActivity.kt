@@ -20,12 +20,16 @@ import com.dg.fendaice.mathgame.ui.AuthScreen
 import com.dg.fendaice.mathgame.ui.GameDestination
 import com.dg.fendaice.mathgame.ui.MathGameRoot
 import com.dg.fendaice.ui.theme.FendaiceTheme
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        // Initialize Google Mobile Ads (AdMob)
+        MobileAds.initialize(this) {}
 
         setContent {
             FendaiceTheme {
@@ -93,5 +97,5 @@ private fun RequestNotificationPermission() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+
 }

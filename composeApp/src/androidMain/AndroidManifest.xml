@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting">
 
+        <!-- Google Mobile Ads (AdMob) App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5220080018609637~2686258106" />
+
         <service
             android:name=".service.FendaiceMessagingService"
             android:exported="false">

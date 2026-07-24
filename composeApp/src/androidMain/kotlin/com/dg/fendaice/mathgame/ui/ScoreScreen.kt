@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import com.dg.fendaice.R
+import com.dg.fendaice.ui.components.BannerAdView
 
 @Composable
 fun ScoreScreen(
@@ -113,6 +114,9 @@ fun ScoreScreen(
             ) {
                 Text(stringResource(R.string.back_to_menu_button), style = MaterialTheme.typography.titleMedium)
             }
+
+            Spacer(Modifier.height(16.dp))
+            BannerAdView()
         }
     }
 }

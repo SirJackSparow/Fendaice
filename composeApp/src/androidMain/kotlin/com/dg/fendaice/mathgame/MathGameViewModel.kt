@@ -57,7 +57,7 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
     private val _currentUserId = MutableStateFlow<String?>(null)
     val currentUserId = _currentUserId.asStateFlow()
 
-    private val _remainingRefreshes = MutableStateFlow(2)
+    private val _remainingRefreshes = MutableStateFlow(6)
     val remainingRefreshes = _remainingRefreshes.asStateFlow()
 
     init {
@@ -76,44 +76,65 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
 
     fun fetchRankings(isManual: Boolean = false) {
         viewModelScope.launch {
+            // Check daily refresh limit for manual refreshes
+            val remaining = syncManager.getRemainingManualRefreshes()
+            if (isManual && remaining <= 0) return@launch
+
             val currentStats = userDao.getUserStats().firstOrNull()
-            
+
             if (isManual && currentStats != null) {
                 // Find user in local rankings
                 val localUserId = _currentUserId.value
                 val userInRankings = globalRankings.value.find { it.userId == localUserId }
-                
+
                 // If score differs from leaderboard, force push before fetching
                 if (userInRankings?.totalScore != currentStats.totalScore) {
                     rankingRepository.pushStatsToFirestore(currentStats, force = true)
                 }
-            } else if (currentStats != null && currentStats.totalScore == 0) {
-                // Also attempt to push local stats if score is 0
-                rankingRepository.pushStatsToFirestore(currentStats)
             }
-            
-            rankingRepository.fetchGlobalRankings(force = isManual)
+
+            rankingRepository.fetchGlobalRankings(force = isManual, currentUserStats = currentStats)
             updateRemainingRefreshes()
         }
     }
 
     fun registerUser(name: String, password: String) {
         viewModelScope.launch {
-            // Preserve existing stats when updating user name
+            val passwordHash = password.toSha256()
+            // Each account gets unique userId from name+password hash
+            val accountId = (name + password).toSha256()
+            syncManager.setUserId(accountId)
+            syncManager.saveCredentials(name, passwordHash)
+            _currentUserId.value = accountId
+
             val currentStats = userDao.getUserStats().firstOrNull() ?: UserStats()
             val updatedStats = currentStats.copy(
                 userName = name,
-                passwordHash = password.toSha256()
+                passwordHash = passwordHash
             )
             userDao.updateStats(updatedStats)
-            rankingRepository.pushStatsToFirestore(updatedStats)
+            // Push to Firestore so they appear in global rankings
+            rankingRepository.pushStatsToFirestore(updatedStats, force = true)
+            fetchRankings(isManual = true)
         }
     }
 
     fun loginUser(name: String, password: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val currentStats = userDao.getUserStats().firstOrNull()
-            if (currentStats != null && currentStats.userName == name && currentStats.passwordHash == password.toSha256()) {
+            val inputHash = password.toSha256()
+            val accountId = (name + password).toSha256()
+
+            val match = rankingRepository.loginUser(accountId, name, inputHash)
+
+            if (match) {
+                syncManager.setUserId(accountId)
+                _currentUserId.value = accountId
+                syncManager.saveCredentials(name, inputHash)
+
+                // Restore name + hash in Room so MainActivity shows game screens
+                val stats = userDao.getUserStats().firstOrNull() ?: UserStats()
+                userDao.updateStats(stats.copy(userName = name, passwordHash = inputHash))
+
                 onResult(true)
             } else {
                 onResult(false)
@@ -123,7 +144,10 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
 
     fun logout() {
         viewModelScope.launch {
+            // Don't clear DataStore credentials — needed for next login
             userDao.updateStats(UserStats())
+            syncManager.resetUserId()
+            _currentUserId.value = syncManager.getUserId()
         }
     }
 
@@ -200,8 +224,13 @@ class MathGameViewModel(application: Application) : AndroidViewModel(application
                 gamesPlayed = currentStats.gamesPlayed + 1
             )
             userDao.updateStats(updatedStats)
-            // Push to Firestore if 24 hours have passed
-            rankingRepository.pushStatsToFirestore(updatedStats)
+            // Always push to Firestore after game finishes
+            rankingRepository.pushStatsToFirestore(updatedStats, force = true)
+            // Refresh rankings to show new score
+            if (syncManager.getRemainingManualRefreshes() > 0) {
+                rankingRepository.fetchGlobalRankings(force = true, currentUserStats = updatedStats)
+                updateRemainingRefreshes()
+            }
         }
     }
 

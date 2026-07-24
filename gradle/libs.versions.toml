@@ -23,10 +23,12 @@ ksp = "2.1.0-1.0.29"
 lottie = "6.7.1"
 splashscreen = "1.2.0"
 
+playServicesAds = "23.6.0"
 startup = "1.2.0"
 kotlin-reflect = "2.3.0"
 
 [libraries]
+play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }

@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dg.fendaice.mathgame.MathGameViewModel
+import androidx.compose.foundation.layout.Column
+import com.dg.fendaice.ui.components.BannerAdView
 import com.dg.fendaice.R
 
 @Composable
@@ -30,27 +32,33 @@ fun MathGameRoot(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             if (bottomNavVisible) {
-                NavigationBar {
-                    NavigationBarItem(
-                        selected = currentScreen == GameDestination.Menu,
-                        onClick = { currentScreen = GameDestination.Menu },
-                        icon = { Icon(Icons.Rounded.Home, null) },
-                        label = { Text(stringResource(R.string.home_tab)) }
-                    )
-                    NavigationBarItem(
-                        selected = currentScreen == GameDestination.Ranking,
-                        onClick = { currentScreen = GameDestination.Ranking },
-                        icon = { Icon(Icons.Rounded.Stars, null) },
-                        label = { Text(stringResource(R.string.ranking_tab)) }
-                    )
-                    NavigationBarItem(
-                        selected = currentScreen == GameDestination.Profile,
-                        onClick = { currentScreen = GameDestination.Profile },
-                        icon = { Icon(Icons.Rounded.Person, null) },
-                        label = { Text(stringResource(R.string.profile_tab)) }
-                    )
+                Column {
+                    BannerAdView()
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ) {
+                        NavigationBarItem(
+                            selected = currentScreen == GameDestination.Menu,
+                            onClick = { currentScreen = GameDestination.Menu },
+                            icon = { Icon(Icons.Rounded.Home, null) },
+                            label = { Text(stringResource(R.string.home_tab)) }
+                        )
+                        NavigationBarItem(
+                            selected = currentScreen == GameDestination.Ranking,
+                            onClick = { currentScreen = GameDestination.Ranking },
+                            icon = { Icon(Icons.Rounded.Stars, null) },
+                            label = { Text(stringResource(R.string.ranking_tab)) }
+                        )
+                        NavigationBarItem(
+                            selected = currentScreen == GameDestination.Profile,
+                            onClick = { currentScreen = GameDestination.Profile },
+                            icon = { Icon(Icons.Rounded.Person, null) },
+                            label = { Text(stringResource(R.string.profile_tab)) }
+                        )
+                    }
                 }
             }
         }

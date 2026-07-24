@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import com.dg.fendaice.mathgame.MathGameViewModel
 import com.dg.fendaice.R
+import com.dg.fendaice.ui.components.BannerAdView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -249,6 +250,8 @@ fun GameScreen(viewModel: MathGameViewModel, onBack: () -> Unit) {
                         }
                     }
                 }
+
+                BannerAdView()
             }
         }
     }

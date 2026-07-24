@@ -36,6 +36,8 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = onBackgroundDark,
     surface = surfaceDark,
     onSurface = onSurfaceDark,
+    surfaceVariant = surfaceVariantDark,
+    onSurfaceVariant = onSurfaceVariantDark,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -59,13 +61,15 @@ private val LightColorScheme = lightColorScheme(
     onBackground = onBackgroundLight,
     surface = surfaceLight,
     onSurface = onSurfaceLight,
+    surfaceVariant = surfaceVariantLight,
+    onSurfaceVariant = onSurfaceVariantLight,
 )
 
 @Composable
 fun FendaiceTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Dynamic color is set to false by default to preserve the app's custom blue primary brand color
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

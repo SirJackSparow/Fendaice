@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,33 +29,28 @@ import com.dg.fendaice.mathgame.data.local.RankingUser
 @Composable
 fun RankingScreen(viewModel: MathGameViewModel) {
     val rankings by viewModel.globalRankings.collectAsState()
-    val remainingRefreshes by viewModel.remainingRefreshes.collectAsState()
     val currentUserId by viewModel.currentUserId.collectAsState()
+    val remainingRefreshes by viewModel.remainingRefreshes.collectAsState()
+
+    // Automatically update rankings every time user enters ranking screen
+    LaunchedEffect(Unit) {
+        if (remainingRefreshes > 0) {
+            viewModel.fetchRankings(isManual = true)
+        }
+    }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                ),
                 title = { 
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(stringResource(R.string.ranking_title), fontWeight = FontWeight.Bold)
-                        Text(
-                            stringResource(R.string.refreshes_left, remainingRefreshes),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (remainingRefreshes > 0) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = { viewModel.fetchRankings(isManual = true) },
-                        enabled = remainingRefreshes > 0
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.refresh_rankings),
-                            tint = if (remainingRefreshes > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-                        )
-                    }
+                    Text(
+                        stringResource(R.string.ranking_title),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             )
         }
@@ -64,21 +60,12 @@ fun RankingScreen(viewModel: MathGameViewModel) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (remainingRefreshes == 0) {
-                Surface(
-                    color = MaterialTheme.colorScheme.errorContainer,
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.refresh_limit_reached),
-                        color = MaterialTheme.colorScheme.onErrorContainer,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(12.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                }
-            }
+            Text(
+                text = stringResource(R.string.refreshes_left, remainingRefreshes),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)
+            )
 
             LazyColumn(
                 modifier = Modifier
